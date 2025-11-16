@@ -19,11 +19,12 @@ def parse_parameter_values(Ls_string):
     parameter_values : ndarray
         1D array of parameter values.
 
-    Example use cases:
-        '1.5'            -> np.array([1.5])
-        '1.0,2.0,3.0'    -> np.array([1.0, 2.0, 3.0])
-        '5.0,20.0:50'    -> np.linspace(5, 20, 50)
-        '5.0,20.0:50,1.5 -> 5 + np.linspace(0, 1, 50)**1.5 * (20 - 5)
+    Examples
+    --------
+    '1.5'            -> np.array([1.5])
+    '1.0,2.0,3.0'    -> np.array([1.0, 2.0, 3.0])
+    '5.0,20.0:50'    -> np.linspace(5, 20, 50)
+    '5.0,20.0:50,1.5 -> 5 + np.linspace(0, 1, 50)**1.5 * (20 - 5)
     """
     s = Ls_string.strip()
 
@@ -68,9 +69,10 @@ def parse_model_instance(model_string):
     model_instance : BaseModel
         An instance of a class that subclasses the abstract class `BaseModel`.
 
-    Example use cases:
-        'gaussian.Gaussian1d:N=128,V0=-4.0,R=2.0' -> pm.gaussian.Gaussian1d(N=128, V0=-4.0, R=2.0)
-        'independent.Independent'                 -> pm.independent.Independent()
+    Examples
+    --------
+    'gaussian.Gaussian1d:N=128,V0=-4.0,R=2.0' -> pm.gaussian.Gaussian1d(N=128, V0=-4.0, R=2.0)
+    'independent.Independent'                 -> pm.independent.Independent()
     """
     s = model_string.strip()
 

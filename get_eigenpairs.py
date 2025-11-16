@@ -74,7 +74,7 @@ def main():
             with open(args.output, "w") as f:
                 f.write(f"# Timestamp: {time.strftime('%A, %b %d, %Y %H:%M:%S')}\n")
                 f.write(f"# Config: model={args.model};parameters={args.parameters};knum={args.knum}\n")
-                f.write(f"# Command used: {' '.join(sys.argv)}\n\n")
+                f.write(f"# Command used: {' '.join(sys.argv)}\n")
                 np.savetxt(f, np.column_stack([Ls, eigenvalues]), fmt="%.8f", delimiter="\t")
             logging.info("Finished writing text output file.")
 
