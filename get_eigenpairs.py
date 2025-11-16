@@ -2,10 +2,27 @@
 import os, sys
 import argparse
 import time
+import logging
+logger = logging.getLogger(__name__)
 
 import h5py
+import numpy as np
 
 from src import run
+
+def setup_logging(verbose=0):
+    if verbose == 0: 
+        level = logging.WARNING
+    elif verbose == 1:
+        level = logging.INFO
+    else:
+        level = logging.DEBUG
+
+    logging.basicConfig(
+            level = level,
+            format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+            datefmt="%H:%M:%S"
+        )
 
 def main():
     parser = argparse.ArgumentParser(description="Compute eigenpairs at a set of parameters L for a given model.")
@@ -16,36 +33,24 @@ def main():
     parser.add_argument("-vectors", "--vectors", action="store_true", help="Output eigenvectors as well as eigenvalues.")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase verbosity (-v, -vv).")
 
-    args = parser.parse_args()
-  
-    start = time.time()
-
-    # setup logging
-    #setup_logging(args.verbose)
+    args = parser.parse_args()   # parse CLI args
+    setup_logging(args.verbose)  # setup logging
+    start = time.time()          # start timer to measure elapsed time
+    print(f"Model = {args.model.strip()}\tLs = {args.parameters.strip()}\tk = {str(args.knum).strip()}")
 
     # parse parameters + model instance
+    logger.info(f"Parsing parameters = {args.parameters} and model = {args.model}.")
     Ls = run.parse_parameter_values(args.parameters)
     model_instance = run.parse_model_instance(args.model)
+    logger.info(f"Finished parsing parameters and model.")
 
     # compute eigenpairs
-    print(f"Model = {args.model}\tLs = {args.parameters}\tk = {args.knum}")
-    print("Computing eigenvalues...")
-    eigenvalues, eigenvectors = run.compute_eigenpairs(model_instance, Ls, args.knum)
-
-    # print eigenpairs
-    for i, L in enumerate(Ls):
-        print(f"Spectrum at L = {L:.3f}")
-        print(f"\t{eigenvalues[i]}")
-        if args.vectors:
-            for k, vec in enumerate(eigenvectors[i]):
-                # print only the first 3 elements of each eigenvector
-                # (prints all elements if 3 > len(vec))
-                formatted_eigenvecs = [f"{v.real:.4f} + {v.imag:.4f}j" for v in vec[:4]]
-                print(f"\tEigenvector {k}: {formatted_eigenvecs} ... [{len(vec)} entries total]")
-                
+    logger.info("Computing eigenvalues.")
+    eigenvalues, eigenvectors = run.compute_eigenpairs(model_instance, Ls, args.knum) 
 
     # write eigenpair data to file if requested
     if args.output:
+        logger.info(f"Writing results to {args.output}.")
         # if file ends in h5, use h5py format, otherwise treat everything like .dat
         if args.output.endswith(".h5"):
             with h5py.File(args.output, "w") as f:
@@ -61,22 +66,32 @@ def main():
                 f.attrs["parameters"] = args.parameters
                 f.attrs["knum"] = args.knum
                 f.attrs["command"] = ' '.join(sys.argv)
+            logging.info("Finished writing HDF5 file.")
         else:             
             if args.vectors:
-                print("Warning: you selected --vectors but chose an output file that does not support storing full eigenvectors. "
-                      "Use a file ending in .h5 if you want full eigenvector output.")
+                logger.warning("You selected --vectors but chose an output file that does not support storing full eigenvectors. "
+                      "Use a .h5 file if you want full eigenvector output.")
             with open(args.output, "w") as f:
                 f.write(f"# Timestamp: {time.strftime('%A, %b %d, %Y %H:%M:%S')}\n")
                 f.write(f"# Config: model={args.model};parameters={args.parameters};knum={args.knum}\n")
                 f.write(f"# Command used: {' '.join(sys.argv)}\n\n")
                 np.savetxt(f, np.column_stack([Ls, eigenvalues]), fmt="%.8f", delimiter="\t")
+            logging.info("Finished writing text output file.")
 
+    # print eigenpairs
+    for i, L in enumerate(Ls):
+        print(f"Spectrum at L = {L:.3f}")
+        print(f"\t{eigenvalues[i]}")
+        if args.vectors:
+            for k, vec in enumerate(eigenvectors[i]):
+                # print only the first 4 elements of each eigenvector
+                # (prints all elements if 4 > len(vec))
+                formatted_eigenvecs = [f"{v.real:.4f} + {v.imag:.4f}j" for v in vec[:4]]
+                print(f"\tEigenvector {k}: {formatted_eigenvecs} ... [{len(vec)} entries total]")
+    
     end = time.time()
     # print total time elapsed
-    print(f"Done.\nElapsed time: {end - start:.3f} seconds")
-
-def logger():
-    pass
+    print(f"Done.\nElapsed time: {end - start:.3f} seconds.")
 
 if __name__=="__main__":
     main()

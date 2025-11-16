@@ -2,6 +2,9 @@
 import numpy as np
 from . import physics_models as pm
 
+import logging
+logger = logging.getLogger(__name__)
+
 def parse_parameter_values(Ls_string):
     """
     Parses a flexible CLI argument for parameter values.
@@ -36,15 +39,19 @@ def parse_parameter_values(Ls_string):
                 llen = llen_lexp
                 lexp = 1.0
             lmin, lmax, llen = float(lmin), float(lmax), int(llen)
+            logger.debug(f"Converting {Ls_string} to np.linspace format with start={lmin}, end={lmax}, len={llen} "
+                         f"and lexp={lexp}.")
             return lmin + np.linspace(0.0, 1.0, llen)**lexp * (lmax - lmin)
         except Exception as e:
             raise ValueError(f"Invalid linspace format: {s}. Use 'start,end:len' or 'start,end:len,exp'") from e
     
     # otherwise, assume comma-separated list of numbers
     if "," in s:
+        logger.debug(f"Converting {Ls_string} to np.array from comma-separated list format.")
         return np.array([float(x) for x in s.split(",")])
 
     # otherwise, assume a single float
+    logger.debug(f"Converting {Ls_string} to np.array from float format.")
     return np.array([float(s)])
 
 def parse_model_instance(model_string):
@@ -81,6 +88,9 @@ def parse_model_instance(model_string):
     except AttributeError as e:
         raise RuntimeError(f"Model {model_name} not found in `physics_models` module.") from e
     model_instance = ModelClass(**model_kwargs)
+    logger.debug(f"Converted {model_string} to instance of {model_instance.__class__.__name__} with "
+                 f"attributes {[(k, v, type(v)) for k, v in vars(model_instance).items()]}.")
+
     return model_instance
 
 def compute_eigenpairs(model_instance, parameter_values, k_num):

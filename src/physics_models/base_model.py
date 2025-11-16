@@ -18,6 +18,9 @@ import abc
 import numpy as np
 import scipy.sparse as ss
 
+import logging
+logger = logging.getLogger(__name__)
+
 class BaseModel(abc.ABC):
     """
     Abstract base class for lattice Hamiltonian models depending on a parameter L.
@@ -106,6 +109,7 @@ class BaseModel(abc.ABC):
         eigenvalues = np.zeros((len(Ls), k_num), dtype=np.float64)
         eigenvectors = np.zeros((len(Ls), k_num, self.construct_H(Ls[0]).shape[0]), dtype=np.complex128)
         for i, Li in enumerate(Ls):
+            logger.info(f"Computing eigenpairs for L={Li}.")
             H = self.construct_H(Li)
             eigvals, eigvecs = ss.linalg.eigsh(H, k=k_num, which='SA')
             sort_indices = np.argsort(eigvals)

@@ -8,4 +8,5 @@ __pycache__/
 
 # ignore all large data files
 *.dat
+*.txt
 *.h5
