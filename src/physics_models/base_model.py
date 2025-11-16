@@ -82,7 +82,7 @@ class BaseModel(abc.ABC):
         Parameters
         ----------
         L : float or array_like
-            Parameter (or list of parameters) controlling the Hamiltonian
+            Parameter (or list of parameters) controlling the Hamiltonian.
         k_num : int, optional
             Number of lowest eigenpairs to compute. Default is 1.
         v : bool, optional
@@ -91,20 +91,16 @@ class BaseModel(abc.ABC):
         Returns
         -------
         eigenvalues : ndarray
-            If L is a scalar, returns shape (k_num,)
-            If L is an array, returns shape (len(L), k_num),
-                where each row corresponds to one parameter value
+            The `k_num` lowest eigenvalues at each `L`, listed in ascending order.
+            Shape (len(L), k_num), where each row corresponds to one parameter value.
         eigenvectors : ndarray
-            If L is a scalar, returns shape (k_num, n), where each row is an eigenvector
-                and n is the dimension of the Hamiltonian
-            if L is an array, returns shape (len(L), k_num, n)
+            The `k_num` lowest eigenvectors at each `L`, listed in the ascending order
+            according to the eigenvalues. Shape (len(L), k_num, n).
  
         Notes
         -----
         Uses `scipy.sparse.linalg.eigsh` to compute the lowest eigenvalues.
-        Falls back internally to a dense solver for very small matrices
-        Eigenvalues are sorted in ascending order
-
+        Falls back internally to a dense solver for very small matrices.
         """
         Ls = np.atleast_1d(L)
         eigenvalues = np.zeros((len(Ls), k_num), dtype=np.float64)
@@ -115,8 +111,6 @@ class BaseModel(abc.ABC):
             sort_indices = np.argsort(eigvals)
             eigenvalues[i] = eigvals[sort_indices][:k_num]
             eigenvectors[i] = eigvecs[:, sort_indices][:, :k_num].T
-        if np.isscalar(L):
-            return eigenvalues[0], eigenvectors[0]
         return eigenvalues, eigenvectors
 
 

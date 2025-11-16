@@ -1,0 +1,11 @@
+# ignore all temporary python files (pycache, pyc, ipynb_checkpoints).
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# ignore the local python environment.
+.venv/
+
+# ignore all large data files
+*.dat
+*.h5
