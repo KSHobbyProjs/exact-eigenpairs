@@ -26,11 +26,11 @@ def setup_logging(verbose=0):
 
 def main():
     parser = argparse.ArgumentParser(description="Compute eigenpairs at a set of parameters L for a given model.")
-    parser.add_argument("-model", "--model", type=str, default="gaussian.Gaussian1d:N=128,V0=-4.0,R=2.0", help="Model in 'module.Class:kw1=val,kw2=val' format.")
+    parser.add_argument("-m", "--model", type=str, default="gaussian.Gaussian1d:N=128,V0=-4.0,R=2.0", help="Model in 'module.Class:kw1=val,kw2=val' format.")
     parser.add_argument("-L", "--parameters", type=str, default="5.0,20.0:20", help="Parameter range in 'start,end:len', '1.0,2.0,3.0', or 'start,end:len,exp' format.")
     parser.add_argument("-k", "--knum", type=int, default=1, help="Number of eigenvalues to compute at each parameter value.")
-    parser.add_argument("-out", "--output", type=str, default=None, help="Output filename (optional).")
-    parser.add_argument("-vectors", "--vectors", action="store_true", help="Output eigenvectors as well as eigenvalues.")
+    parser.add_argument("-o", "--output", type=str, default=None, help="Output filename (optional).")
+    parser.add_argument("--vectors", action="store_true", help="Output eigenvectors as well as eigenvalues.")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase verbosity (-v, -vv).")
 
     args = parser.parse_args()   # parse CLI args
