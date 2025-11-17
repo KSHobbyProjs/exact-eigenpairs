@@ -42,7 +42,9 @@ def main():
     logger.info(f"Parsing parameters = {args.parameters} and model = {args.model}.")
     Ls = run.parse_parameter_values(args.parameters)
     model_instance = run.parse_model_instance(args.model)
-    logger.info(f"Finished parsing parameters and model.")
+    logger.debug(f"Parsed {args.model} to {type(model_instance).__name__}\n"                      # POSSIBLY DELETE THIS AFTER STABLE
+                 f"\tand {args.parameters} to " + 
+                 ", ".join(f"{k}={v} ({type(v).__name__})" for k, v in vars(model_instance).items()))
 
     # compute eigenpairs
     logger.info("Computing eigenvalues.")
