@@ -53,13 +53,13 @@ def _write_results(args, Ls, eigenvalues, eigenvectors):
                 }
     # if file ends in h5, use h5py format, otherwise treat everything like .dat
     if args.output.endswith(".h5"):
-        io.write_energies_toh5(args.output, Ls, eigenvalues, eigenvectors if args.vectors else None, metadata)
+        io.write_energies_to_h5(args.output, Ls, eigenvalues, eigenvectors if args.vectors else None, metadata)
         logging.debug("Finished writing HDF5 file.")
     else:             
         if args.vectors:
             logger.warning("You selected --vectors but chose an output file that does not support storing full eigenvectors. "
                   "Use a .h5 file if you want full eigenvector output.")
-        io.write_energies_todat(args.output, Ls, eigenvalues, metadata)
+        io.write_energies_to_dat(args.output, Ls, eigenvalues, metadata)
         logging.debug("Finished writing text output file.")
 
 def _print_results(args, Ls, eigenvalues, eigenvectors):

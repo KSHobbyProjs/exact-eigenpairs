@@ -5,7 +5,7 @@ import numpy as np
 import logging
 logger = logging.getLogger(__name__)
 
-def write_energies_toh5(path, parameters, energies, eigenvectors=None, metadata=None):
+def write_energies_to_h5(path, parameters, energies, eigenvectors=None, metadata=None):
     with h5py.File(path, "w") as f:
         # save eigenvalues and eigenvectors if requested
         f.create_dataset("parameters", data=parameters)
@@ -18,7 +18,7 @@ def write_energies_toh5(path, parameters, energies, eigenvectors=None, metadata=
         for key, val in metadata.items():
             f.attrs[key] = val
 
-def write_energies_todat(path, parameters, energies, metadata=None):
+def write_energies_to_dat(path, parameters, energies, metadata=None):
     with open(path, "w") as f:
         # add metadata
         metadata = metadata or {}
