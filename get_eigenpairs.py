@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-import os, sys
+import sys
 import argparse
 import time
 import logging
 logger = logging.getLogger(__name__)
-
-import h5py
-import numpy as np
 
 from src import parse, io
 
