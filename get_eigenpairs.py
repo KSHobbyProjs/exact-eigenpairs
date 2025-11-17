@@ -55,20 +55,20 @@ def main():
         logger.info(f"Writing results to {args.output}.")
         # create metadata
         metadata = {"timestamp"      : time.strftime("%A, %b %d, %Y %H:%M:%S"),
-                    "model_str"      : args.model,
-                    "parameters_str" : args.parameters,
+                    "model"      : args.model,
+                    "parameters" : args.parameters,
                     "knum"           : args.knum,
                     "command"        : ' '.join(sys.argv)
                     }
         # if file ends in h5, use h5py format, otherwise treat everything like .dat
         if args.output.endswith(".h5"):
-            io.write_energies_toh5(args.output, Ls, eigenvalues, eigenvectors if args.vectors else None, **metadata)
+            io.write_energies_toh5(args.output, Ls, eigenvalues, eigenvectors if args.vectors else None, metadata)
             logging.info("Finished writing HDF5 file.")
         else:             
             if args.vectors:
                 logger.warning("You selected --vectors but chose an output file that does not support storing full eigenvectors. "
                       "Use a .h5 file if you want full eigenvector output.")
-            io.write_energies_todat(args.output, Ls, eigenvalues, **metadata)
+            io.write_energies_todat(args.output, Ls, eigenvalues, metadata)
             logging.info("Finished writing text output file.")
 
     # print eigenpairs
