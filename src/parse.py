@@ -88,37 +88,6 @@ def parse_model_instance(model_string):
     model_instance = ModelClass(**model_kwargs)
     return model_instance
 
-def compute_eigenpairs(model_instance, parameter_values, k_num):
-    """
-    A function to compute the first `k_num` eigenpairs of physics model `model_instance` at
-    every value of `parameter_values`.
-
-    Parameters
-    ----------
-    model_instance : BaseModel
-        An instance of a class that must subclass the abstract class `BaseModel`.
-    parameter_values : float or array-like
-        List of parameter values at which to compute the eigenpairs.
-    k_num : int
-        The number of eigenpairs to take at each parameter value.
-
-    Returns
-    -------
-    eigenvalues : ndarray
-        Array of `k_num`-lowest eigenvalues at each L in `parameter_values`.
-        Shape (len(`parameter_values`), `k_num`). Listed in ascending order.
-    eigenvectors : ndarray
-        Array of `k_num`-lowest eigenvectors at each L in `parameter_values`.
-        Shape (len(`parameter_values`), `k_num`, n), where n is the dimension of the Hamiltonian.
-        Listed in order according to eigenvalues.
-        
-    Note
-    ----
-    This just wraps the get_eigenvectors method in the abstract class BaseModel.
-    """
-    eigenvalues, eigenvectors = model_instance.get_eigenvectors(parameter_values, k_num)
-    return eigenvalues, eigenvectors
-
 def _parse_kwargs(kwargs_string):
     """
     Parses a comma-separated list of key=val pairs into a dictionary.

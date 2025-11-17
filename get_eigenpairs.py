@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 import h5py
 import numpy as np
 
-from src import run
+from src import parse, io
 
 def setup_logging(verbose=0):
     if verbose == 0: 
@@ -40,44 +40,35 @@ def main():
 
     # parse parameters + model instance
     logger.info(f"Parsing parameters = {args.parameters} and model = {args.model}.")
-    Ls = run.parse_parameter_values(args.parameters)
-    model_instance = run.parse_model_instance(args.model)
+    Ls = parse.parse_parameter_values(args.parameters)
+    model_instance = parse.parse_model_instance(args.model)
     logger.debug(f"Parsed {args.model} to {type(model_instance).__name__}\n"                      # POSSIBLY DELETE THIS AFTER STABLE
                  f"\tand {args.parameters} to " + 
                  ", ".join(f"{k}={v} ({type(v).__name__})" for k, v in vars(model_instance).items()))
 
     # compute eigenpairs
     logger.info("Computing eigenvalues.")
-    eigenvalues, eigenvectors = run.compute_eigenpairs(model_instance, Ls, args.knum) 
+    eigenvalues, eigenvectors = model_instance.get_eigenvectors(Ls, args.knum) 
 
     # write eigenpair data to file if requested
     if args.output:
         logger.info(f"Writing results to {args.output}.")
+        # create metadata
+        metadata = {"timestamp"      : time.strftime("%A, %b %d, %Y %H:%M:%S"),
+                    "model_str"      : args.model,
+                    "parameters_str" : args.parameters,
+                    "knum"           : args.knum,
+                    "command"        : ' '.join(sys.argv)
+                    }
         # if file ends in h5, use h5py format, otherwise treat everything like .dat
         if args.output.endswith(".h5"):
-            with h5py.File(args.output, "w") as f:
-                # save eigenvalues and eigenvectors if requested
-                f.create_dataset("Ls", data=Ls)
-                f.create_dataset("eigenvalues", data=eigenvalues)
-                if args.vectors:
-                    f.create_dataset("eigenvectors", data=eigenvectors)
-
-                # add metadata
-                f.attrs["timestamp"] = time.strftime("%A, %b %d, %Y %H:%M:%S")
-                f.attrs["model"] = args.model
-                f.attrs["parameters"] = args.parameters
-                f.attrs["knum"] = args.knum
-                f.attrs["command"] = ' '.join(sys.argv)
+            io.write_energies_toh5(args.output, Ls, eigenvalues, eigenvectors if args.vectors else None, **metadata)
             logging.info("Finished writing HDF5 file.")
         else:             
             if args.vectors:
                 logger.warning("You selected --vectors but chose an output file that does not support storing full eigenvectors. "
                       "Use a .h5 file if you want full eigenvector output.")
-            with open(args.output, "w") as f:
-                f.write(f"# Timestamp: {time.strftime('%A, %b %d, %Y %H:%M:%S')}\n")
-                f.write(f"# Config: model={args.model};parameters={args.parameters};knum={args.knum}\n")
-                f.write(f"# Command used: {' '.join(sys.argv)}\n")
-                np.savetxt(f, np.column_stack([Ls, eigenvalues]), fmt="%.8f", delimiter="\t")
+            io.write_energies_todat(args.output, Ls, eigenvalues, **metadata)
             logging.info("Finished writing text output file.")
 
     # print eigenpairs
