@@ -45,7 +45,6 @@ def _write_results(args, Ls, eigenvalues, eigenvectors):
     metadata = {"timestamp"      : time.strftime("%A, %b %d, %Y %H:%M:%S"),
                 "model"      : args.model,
                 "parameters" : args.parameters,
-                "knum"           : args.knum,
                 "command"        : ' '.join(sys.argv)
                 }
     # if file ends in h5, use h5py format, otherwise treat everything like .dat
