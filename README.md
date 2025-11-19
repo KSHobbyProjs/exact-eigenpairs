@@ -1,5 +1,5 @@
 # exact-eigenpairs
-A repository for computing exact eigenpairs of physical models (e.g., Gaussian potentials, Ising model) at a series of parameters (system length, coupling constant, etc.)
+A repository for computing exact eigenpairs of physical models (e.g., Gaussian potentials, Ising model) at a series of parameters (system length, coupling constant, etc.).
 
 ---
 
