@@ -35,9 +35,10 @@ def _parse_args():
 def _parse_parameters_and_model(parameter_str, model_str):
     Ls = parse.parse_parameter_values(parameter_str)
     model_instance = parse.parse_model_instance(model_str)
-    logger.debug(f"Parsed {model_str} -> {type(model_instance).__name__}")
+    logger.debug(f"Parsed {model_str} -> " +
+                 f"{type(model_instance).__name__}(" + ','.join(f"{k[1:]}={v} ({type(v).__name__})" for k, v in vars(model_instance).items()) + ").")
     logger.debug(f"Parsed {parameter_str} -> " + 
-                 ', '.join(f"{k}={v} ({type(v).__name__})" for k, v in vars(model_instance).items()) )
+                 f"{type(Ls).__name__}, min={min(Ls)}, max={max(Ls)}, len={len(Ls)}.")
     return Ls, model_instance
 
 def _write_results(args, Ls, eigenvalues, eigenvectors):
