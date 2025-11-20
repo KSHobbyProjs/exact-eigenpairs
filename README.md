@@ -31,13 +31,21 @@ python get_eigenpairs.py \
 ---
 
 ## Output
-- `.h5` files contain three datasets:
-  - `parameters` - the parameters at which the eigenpairs are calculated.
-  - `energies` - eigenvalues.
-  - `eigenvectors` - corresponding eigenvectors.
-- `.dat` files contain two columns:
-  - `parameters` and `energies`.
-     (`eigenvectors` are not written to `.dat` files).
+
+The program writes results to a file specified by the user.  
+- If the output filename ends with `.h5`, the program writes a full HDF5 dataset.  
+- Any other file extension will produce a `.dat`-style column-format summary.
+
+### `.h5` files — full dataset
+- `parameters` — 1D NumPy array of parameter values (`len(parameters)`)  
+- `energies` — 2D NumPy array of shape (`len(parameters)`, `knum`) containing eigenvalues  
+  (*knum* is the number of eigenpairs per parameter, as set by `--knum`)  
+- `eigenvectors` — 3D NumPy array of shape (`len(parameters)`, `knum`, `vector dimension`) containing eigenvectors
+
+### `.dat` files — summary dataset
+- Column 1: `parameters` — parameter values  
+- Columns 2..(knum+1): `energies` — one column per eigenvalue  
+- Note: `eigenvectors` are **not** included in `.dat` files
 
 ---
 
