@@ -55,10 +55,10 @@ python get_eigenpairs.py \
 
 ## Supported Models
 All models are stored in `src/physics_models`.
-- `Gaussian1d` - single-particle (or relative coordinate for two-particle) 1D Gaussian potential [Gaussian1d model details](models.md#gaussian1d).
-- `Gaussian3d` - single-particle (or relative coordinate for two-particle) 3D Gaussian potential [Gaussian3d model details](models.md#gaussian3d).
-- `Ising` - 1D Ising model with periodic boundary conditions [Ising model details](models.md#ising).
-- `NoninteractingSpins` - 1D series of non-interacting particles influenced by external magnetic field [Non-interacting spins model details](models.md#non-interacting-spins).
+- `Gaussian1d` - single-particle (or relative coordinate for two-particle) 1D Gaussian potential. [Gaussian1d model details](models.md#gaussian1d).
+- `Gaussian3d` - single-particle (or relative coordinate for two-particle) 3D Gaussian potential. [Gaussian3d model details](models.md#gaussian3d).
+- `Ising` - 1D Ising model with periodic boundary conditions. [Ising model details](models.md#ising).
+- `NoninteractingSpins` - 1D series of non-interacting particles influenced by external magnetic field. [Non-interacting spins model details](models.md#non-interacting-spins).
 - `NewModel` - A custom template for user-defined models.
 
 ---
