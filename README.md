@@ -36,16 +36,16 @@ The program writes results to a file specified by the user.
 - If the output filename ends with `.h5`, the program writes a full HDF5 dataset.  
 - Any other file extension will produce a `.dat`-style column-format summary.
 
-### `.h5` files — full dataset
-- `parameters` — 1D NumPy array of parameter values (`len(parameters)`)  
-- `energies` — 2D NumPy array of shape (`len(parameters)`, `knum`) containing eigenvalues  
-  (*knum* is the number of eigenpairs per parameter, as set by `--knum`)  
-- `eigenvectors` — 3D NumPy array of shape (`len(parameters)`, `knum`, `vector dimension`) containing eigenvectors
+- `.h5` files — full dataset
+  - `parameters` — 1D NumPy array of parameter values (`len(parameters)`).  
+  - `energies` — 2D NumPy array of shape (`len(parameters)`, `knum`) containing eigenvalues.  
+    (*knum* is the number of eigenpairs per parameter, as set by `--knum`). 
+  - `eigenvectors` — 3D NumPy array of shape (`len(parameters)`, `knum`, `vector dimension`) containing eigenvectors.
 
-### `.dat` files — summary dataset
-- Column 1: `parameters` — parameter values  
-- Columns 2..(knum+1): `energies` — one column per eigenvalue  
-- Note: `eigenvectors` are **not** included in `.dat` files
+- `.dat` files — summary dataset
+  - Column 1: `parameters` — parameter values.  
+  - Columns 2..(knum+1): `energies` — one column per eigenvalue.  
+  - Note: `eigenvectors` are **not** included in `.dat` files, and columns separated by `\t` delimiter.
 
 ---
 
